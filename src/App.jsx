@@ -415,7 +415,7 @@ export default function App() {
   return (
     <>
       <CustomCursor/>
-      {intro && <IntroScreen onDone={useCallback(() => setIntro(false), [])}/>}
+      {intro && <IntroScreen onDone={() => setIntro(false)}/>}
       {lightbox && <Lightbox photo={lightbox} onClose={() => setLightbox(null)}/>}
       <MobileNav open={menuOpen} onClose={() => setMenuOpen(false)} go={go}/>
       <StickyPlayer track={track} playing={playing}
