@@ -140,7 +140,7 @@ function IntroScreen({ onDone }) {
     const t1 = setTimeout(()=>setFade(true), 1800);
     const t2 = setTimeout(()=>onDone(), 2500);
     return ()=>{ clearTimeout(t1); clearTimeout(t2); };
-  }, [onDone]);
+  }, []);
   return (
     <div style={{position:"fixed",inset:0,zIndex:999,background:C.bg,display:"flex",flexDirection:"column",
       alignItems:"center",justifyContent:"center",opacity:fade?0:1,transition:"opacity .7s ease",pointerEvents:fade?"none":"all"}}>
@@ -415,7 +415,7 @@ export default function App() {
   return (
     <>
       <CustomCursor/>
-      {intro && <IntroScreen onDone={() => setIntro(false)}/>}
+      {intro && <IntroScreen onDone={useCallback(() => setIntro(false), [])}/>}
       {lightbox && <Lightbox photo={lightbox} onClose={() => setLightbox(null)}/>}
       <MobileNav open={menuOpen} onClose={() => setMenuOpen(false)} go={go}/>
       <StickyPlayer track={track} playing={playing}
