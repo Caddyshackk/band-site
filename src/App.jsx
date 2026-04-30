@@ -431,7 +431,9 @@ export default function App() {
           justifyContent:"space-between",padding:"1rem 2.5rem",backdropFilter:"blur(18px)",
           background:"rgba(10,7,5,0.92)",borderBottom:`1px solid ${C.border}`}}>
           <span style={{fontFamily:FONTS.display,fontSize:"1.1rem",fontWeight:700,letterSpacing:"0.1em",
-            color:C.gold,textTransform:"uppercase",textShadow:GG(0.5)}}>{BAND_NAME}</span>
+            color:C.gold,textTransform:"uppercase",textShadow:GG(0.5),position:"absolute",left:"50%",transform:"translateX(-50%)"}}>
+  {BAND_NAME}
+</span>
           <div style={{display:"flex",gap:"2rem"}}>
             {["About","Music","Shows","Gallery","Merch","Contact"].map(l => (
               <span key={l} className="nav-link" style={{fontSize:"0.68rem",fontWeight:500,letterSpacing:"0.18em",textTransform:"uppercase",color:C.sepia}} onClick={() => go(l.toLowerCase())}>{l}</span>
@@ -480,10 +482,6 @@ export default function App() {
               <button className="submit-btn" onClick={() => go("music")} style={{padding:"0.9rem 2.6rem",background:"transparent",color:C.gold,border:`1px solid ${C.gold}`,fontSize:"0.7rem",letterSpacing:"0.2em",textTransform:"uppercase",fontWeight:500,fontFamily:FONTS.ui,textShadow:GG(0.5)}}>Listen Now</button>
               <button className="border-glow-p" onClick={() => go("shows")} style={{padding:"0.9rem 2.6rem",background:"rgba(255,62,138,0.08)",color:C.neonPink,border:`1px solid ${C.neonPink}`,fontSize:"0.7rem",letterSpacing:"0.2em",textTransform:"uppercase",fontWeight:500,fontFamily:FONTS.ui,textShadow:GP(0.7)}}>See Shows</button>
             </div>
-          </div>
-          <div style={{position:"absolute",bottom:"2.5rem",left:"50%",transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",gap:6,opacity:0.5}}>
-            <span style={{fontSize:"0.6rem",letterSpacing:"0.2em",textTransform:"uppercase",color:C.sepia}}>Scroll</span>
-            <div style={{width:1,height:40,background:`linear-gradient(to bottom,${C.gold},transparent)`}}/>
           </div>
         </section>
 
