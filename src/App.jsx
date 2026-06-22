@@ -343,6 +343,7 @@ export default function App() {
                 </div>
               ) : (
                 <form onSubmit={e => { e.preventDefault(); setSent(true); }}>
+                  <input type="text" name="_gotcha" style={{display:"none"}}/>
                   {[["Name","text","Your name"],["Email","email","your@email.com"],["Inquiry Type","text","Booking / Press / General"]].map(([lbl,type,ph]) => (
                     <div key={lbl} style={{marginBottom:"1.4rem"}}>
                       <label style={{display:"block",fontSize:"0.62rem",letterSpacing:"0.16em",
