@@ -235,13 +235,6 @@ export default function App() {
             position:"absolute",left:"50%",transform:"translateX(-50%)"}}>
             {BAND_NAME}
           </span>
-          <div style={{display:"flex",gap:"2rem"}}>
-            {navItems.map(l => (
-              <span key={l} className="nav-link" style={{fontSize:"0.68rem",fontWeight:500,
-                letterSpacing:"0.18em",textTransform:"uppercase",color:C.sepia}}
-                onClick={() => go(l.toLowerCase())}>{l}</span>
-            ))}
-          </div>
           <button onClick={() => setMenuOpen(true)} style={{background:"none",border:"none",cursor:"pointer",
             display:"flex",flexDirection:"column",gap:5,padding:4,marginLeft:"auto"}}>
             {[0,1,2].map(i => <div key={i} style={{width:22,height:1.5,background:C.gold,boxShadow:GG(0.4)}}/>)}
