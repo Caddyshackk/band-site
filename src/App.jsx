@@ -177,6 +177,103 @@ function MobileNav({ open, onClose, go, navItems }) {
   );
 }
 
+const INQUIRY_TYPES = [
+  { label:"Booking",  email:"booking@candychic.com",    desc:"Show bookings, venue inquiries, tour requests" },
+  { label:"Press",    email:"management@candychic.com", desc:"Interviews, features, press kits" },
+  { label:"General",  email:"howdy@candychic.com",      desc:"Collabs, fan mail, everything else" },
+];
+
+function ContactForm() {
+  const [inquiry, setInquiry] = useState(null);
+  const [sent,    setSent]    = useState(false);
+
+  const selected = INQUIRY_TYPES.find(t => t.label === inquiry);
+  const inputStyle = {
+    width:"100%", padding:"0.7rem 0", border:"none",
+    borderBottom:`1px solid rgba(201,168,76,0.25)`, background:"transparent",
+    fontFamily:FONTS.body, fontSize:"1rem", color:C.cream, transition:"border-color .2s",
+  };
+  const labelStyle = {
+    display:"block", fontSize:"0.62rem", letterSpacing:"0.16em",
+    textTransform:"uppercase", fontWeight:500, color:C.neonCyan,
+    marginBottom:"0.45rem", fontFamily:FONTS.ui, textShadow:GC(0.4),
+  };
+
+  if (sent) return (
+    <div style={{paddingTop:"2.5rem",textAlign:"center"}}>
+      <p style={{fontFamily:FONTS.display,fontSize:"2.2rem",fontWeight:700,
+        color:C.neonPink,textShadow:GP(0.8)}}>Thank you.</p>
+      <p style={{fontFamily:FONTS.body,fontStyle:"italic",color:C.sepia,
+        marginTop:"0.6rem",fontSize:"1.05rem"}}>We'll be in touch shortly.</p>
+    </div>
+  );
+
+  return (
+    <form onSubmit={e => { e.preventDefault(); setSent(true); }}>
+      <input type="text" name="_gotcha" style={{display:"none"}}/>
+
+      {/* Inquiry type selector */}
+      <div style={{marginBottom:"1.8rem"}}>
+        <label style={labelStyle}>Inquiry Type</label>
+        <div style={{display:"flex",gap:"0.6rem",marginTop:"0.4rem",flexWrap:"wrap"}}>
+          {INQUIRY_TYPES.map(t => (
+            <button key={t.label} type="button"
+              onClick={() => setInquiry(t.label)}
+              style={{padding:"0.5rem 1.2rem",fontFamily:FONTS.ui,fontSize:"0.68rem",
+                letterSpacing:"0.12em",textTransform:"uppercase",cursor:"pointer",
+                border:`1px solid ${inquiry===t.label?C.neonPink:C.border}`,
+                background:inquiry===t.label?"rgba(255,62,138,0.1)":"transparent",
+                color:inquiry===t.label?C.neonPink:C.sepia,
+                textShadow:inquiry===t.label?GP(0.6):"none",
+                transition:"all .2s"}}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {/* Dynamic routing hint */}
+        {selected && (
+          <div style={{marginTop:"0.8rem",padding:"0.7rem 1rem",
+            border:`1px solid rgba(0,212,204,0.2)`,background:"rgba(0,212,204,0.04)"}}>
+            <p style={{fontSize:"0.68rem",color:C.neonCyan,letterSpacing:"0.06em",marginBottom:3,
+              textShadow:GC(0.5)}}>{selected.email}</p>
+            <p style={{fontSize:"0.65rem",color:C.sepia,fontFamily:FONTS.body,fontStyle:"italic"}}>{selected.desc}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Name */}
+      <div style={{marginBottom:"1.4rem"}}>
+        <label style={labelStyle}>Name</label>
+        <input type="text" placeholder="Your name" required style={inputStyle}/>
+      </div>
+
+      {/* Email */}
+      <div style={{marginBottom:"1.4rem"}}>
+        <label style={labelStyle}>Email</label>
+        <input type="email" placeholder="your@email.com" required style={inputStyle}/>
+      </div>
+
+      {/* Message */}
+      <div style={{marginBottom:"1.4rem"}}>
+        <label style={labelStyle}>Message</label>
+        <textarea placeholder="Tell us more..." rows={4} required
+          style={{...inputStyle, resize:"none"}}/>
+      </div>
+
+      <button type="submit" className="submit-btn"
+        disabled={!inquiry}
+        style={{marginTop:"0.8rem",padding:"0.85rem 2.4rem",background:"transparent",
+          color:inquiry?C.gold:"rgba(201,168,76,0.3)",
+          border:`1px solid ${inquiry?C.gold:"rgba(201,168,76,0.3)"}`,
+          fontFamily:FONTS.ui,fontSize:"0.7rem",letterSpacing:"0.2em",
+          textTransform:"uppercase",fontWeight:500,cursor:inquiry?"pointer":"not-allowed",
+          textShadow:inquiry?GG(0.5):"none",transition:"all .2s"}}>
+        {inquiry ? `Send to ${inquiry}` : "Select an Inquiry Type"}
+      </button>
+    </form>
+  );
+}
+
 // ─────────────────────────────────────────────
 //  APP
 // ─────────────────────────────────────────────
@@ -342,34 +439,7 @@ export default function App() {
                     marginTop:"0.6rem",fontSize:"1.05rem"}}>We'll be in touch shortly.</p>
                 </div>
               ) : (
-                <form onSubmit={e => { e.preventDefault(); setSent(true); }}>
-                  <input type="text" name="_gotcha" style={{display:"none"}}/>
-                  {[["Name","text","Your name"],["Email","email","your@email.com"],["Inquiry Type","text","Booking / Press / General"]].map(([lbl,type,ph]) => (
-                    <div key={lbl} style={{marginBottom:"1.4rem"}}>
-                      <label style={{display:"block",fontSize:"0.62rem",letterSpacing:"0.16em",
-                        textTransform:"uppercase",fontWeight:500,color:C.neonCyan,marginBottom:"0.45rem",
-                        fontFamily:FONTS.ui,textShadow:GC(0.4)}}>{lbl}</label>
-                      <input type={type} placeholder={ph} style={{width:"100%",padding:"0.7rem 0",
-                        border:"none",borderBottom:`1px solid rgba(201,168,76,0.25)`,background:"transparent",
-                        fontFamily:FONTS.body,fontSize:"1rem",color:C.cream,transition:"border-color .2s"}}/>
-                    </div>
-                  ))}
-                  <div style={{marginBottom:"1.4rem"}}>
-                    <label style={{display:"block",fontSize:"0.62rem",letterSpacing:"0.16em",
-                      textTransform:"uppercase",fontWeight:500,color:C.neonCyan,marginBottom:"0.45rem",
-                      fontFamily:FONTS.ui,textShadow:GC(0.4)}}>Message</label>
-                    <textarea placeholder="Tell us more..." rows={4} style={{width:"100%",padding:"0.7rem 0",
-                      border:"none",borderBottom:`1px solid rgba(201,168,76,0.25)`,background:"transparent",
-                      fontFamily:FONTS.body,fontSize:"1rem",color:C.cream,resize:"none"}}/>
-                  </div>
-                  <button type="submit" className="submit-btn" style={{marginTop:"0.8rem",
-                    padding:"0.85rem 2.4rem",background:"transparent",color:C.gold,
-                    border:`1px solid ${C.gold}`,fontFamily:FONTS.ui,fontSize:"0.7rem",
-                    letterSpacing:"0.2em",textTransform:"uppercase",fontWeight:500,cursor:"pointer",
-                    textShadow:GG(0.5)}}>
-                    Send Message
-                  </button>
-                </form>
+                <ContactForm/>
               )}
             </div>
           </div>
