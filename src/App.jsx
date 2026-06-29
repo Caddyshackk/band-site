@@ -123,41 +123,6 @@ function IntroScreen({ onDone }) {
 }
 
 // ─────────────────────────────────────────────
-//  CUSTOM CURSOR
-// ─────────────────────────────────────────────
-
-function CustomCursor() {
-  const ringRef = useRef(null);
-  const dotRef  = useRef(null);
-  const pos     = useRef({x:0,y:0});
-  const cur     = useRef({x:0,y:0});
-
-  useEffect(() => {
-    const onMove = e => { pos.current = {x:e.clientX,y:e.clientY}; };
-    window.addEventListener("mousemove", onMove);
-    let raf;
-    const tick = () => {
-      cur.current.x += (pos.current.x - cur.current.x) * 0.95;
-      cur.current.y += (pos.current.y - cur.current.y) * 0.95;
-      if (ringRef.current) ringRef.current.style.transform = `translate(${cur.current.x-16}px,${cur.current.y-16}px)`;
-      if (dotRef.current)  dotRef.current.style.transform  = `translate(${pos.current.x-3}px,${pos.current.y-3}px)`;
-      raf = requestAnimationFrame(tick);
-    };
-    tick();
-    return () => { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
-  }, []);
-
-  return (
-    <>
-      <div ref={ringRef} style={{position:"fixed",top:0,left:0,width:32,height:32,borderRadius:"50%",
-        border:`1px solid ${C.neonPink}`,boxShadow:GP(0.4),pointerEvents:"none",zIndex:9999}}/>
-      <div ref={dotRef} style={{position:"fixed",top:0,left:0,width:6,height:6,borderRadius:"50%",
-        background:C.neonPink,boxShadow:GP(0.9),pointerEvents:"none",zIndex:9999}}/>
-    </>
-  );
-}
-
-// ─────────────────────────────────────────────
 //  MOBILE NAV
 // ─────────────────────────────────────────────
 
@@ -325,7 +290,6 @@ export default function App() {
 
   return (
     <>
-      <CustomCursor/>
       {intro && <IntroScreen onDone={() => setIntro(false)}/>}
       <MobileNav open={menuOpen} onClose={() => setMenuOpen(false)} go={go} navItems={navItems}/>
 
