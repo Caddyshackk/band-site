@@ -281,7 +281,7 @@ export default function App() {
       .reveal-left   { opacity:0; transform:translateX(-32px); transition:opacity .75s ease,transform .75s ease; }
       .reveal-right  { opacity:0; transform:translateX(32px);  transition:opacity .75s ease,transform .75s ease; }
       .revealed      { opacity:1 !important; transform:translate(0,0) !important; }
-      * { cursor: none !important; }
+      @media (pointer: fine) { * { cursor: none !important; } }
     `;
     document.head.appendChild(st);
   }, []);
