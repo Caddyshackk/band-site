@@ -27,35 +27,47 @@ const CONTACTS = [
 ];
 
 const INQUIRY_TYPES = [
-  { label:"Booking",    email:"booking@candychic.com",    desc:"Show bookings, venue inquiries, tour requests" },
-  { label:"Press",      email:"management@candychic.com", desc:"Interviews, features, press kits" },
-  { label:"General",    email:"howdy@candychic.com",      desc:"Collabs, fan mail, everything else" },
+  { label:"Booking",  email:"booking@candychic.com",    desc:"Show bookings, venue inquiries, tour requests" },
+  { label:"Press",    email:"management@candychic.com", desc:"Interviews, features, press kits" },
+  { label:"General",  email:"howdy@candychic.com",      desc:"Collabs, fan mail, everything else" },
 ];
 
 const SHOW = {
-  stats:      false,
-  about:      false,
-  music:      false,
-  video:      false,
-  shows:      false,
-  gallery:    false,
-  merch:      false,
-  newsletter: false,
+  stats:false, about:false, music:false, video:false,
+  shows:false, gallery:false, merch:false, newsletter:false,
 };
 
 // ─────────────────────────────────────────────
 //  HOOKS
 // ─────────────────────────────────────────────
 
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handle = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handle);
+    return () => window.removeEventListener("resize", handle);
+  }, []);
+  return width;
+}
+
 function useScrollReveal() {
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("revealed"); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.08 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
+}
+
+function useIsTouch() {
+  const [touch, setTouch] = useState(true);
+  useEffect(() => {
+    setTouch(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+  return touch;
 }
 
 // ─────────────────────────────────────────────
@@ -65,7 +77,7 @@ function useScrollReveal() {
 function MarqueeDots({ center=false }) {
   const pat = ["gold","pink","gold","cyan","gold","pink","gold","cyan","gold","gold","pink","gold","cyan","gold","pink","gold","cyan","gold"];
   return (
-    <div style={{display:"flex",alignItems:"center",justifyContent:center?"center":"flex-start",gap:9,margin:"1.8rem 0",flexWrap:"wrap"}}>
+    <div style={{display:"flex",alignItems:"center",justifyContent:center?"center":"flex-start",gap:8,margin:"1.8rem 0",flexWrap:"wrap"}}>
       {pat.map((t,i) => {
         const bg   = t==="pink"?C.neonPink:t==="cyan"?C.neonCyan:i%3===0?C.gold:C.goldDim;
         const glow = t==="pink"?`0 0 6px rgba(255,62,138,0.95)`:t==="cyan"?`0 0 6px rgba(0,212,204,0.95)`:"none";
@@ -77,7 +89,7 @@ function MarqueeDots({ center=false }) {
 
 function Divider({ color="gold" }) {
   const col = color==="pink"?C.neonPink:color==="cyan"?C.neonCyan:C.gold;
-  return <div style={{height:1,background:`linear-gradient(90deg,transparent,${col},transparent)`,margin:"0 1.2rem",opacity:0.3}}/>;
+  return <div style={{height:1,background:`linear-gradient(90deg,transparent,${col},transparent)`,margin:"0 1rem",opacity:0.3}}/>;
 }
 
 // ─────────────────────────────────────────────
@@ -113,16 +125,18 @@ function IntroScreen({ onDone }) {
 }
 
 // ─────────────────────────────────────────────
-//  CUSTOM CURSOR (desktop only via CSS)
+//  CUSTOM CURSOR — desktop only
 // ─────────────────────────────────────────────
 
 function CustomCursor() {
+  const isTouch = useIsTouch();
   const ringRef = useRef(null);
   const dotRef  = useRef(null);
   const pos     = useRef({x:0,y:0});
   const cur     = useRef({x:0,y:0});
 
   useEffect(() => {
+    if (isTouch) return;
     const onMove = e => { pos.current = {x:e.clientX,y:e.clientY}; };
     window.addEventListener("mousemove", onMove);
     let raf;
@@ -135,7 +149,9 @@ function CustomCursor() {
     };
     tick();
     return () => { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
-  }, []);
+  }, [isTouch]);
+
+  if (isTouch) return null;
 
   return (
     <>
@@ -162,11 +178,8 @@ function MobileNav({ open, onClose, go, navItems }) {
         cursor:"pointer",textShadow:GP(0.7)}}>✕</button>
       {navItems.map(l => (
         <span key={l} style={{fontFamily:FONTS.display,fontSize:"clamp(1.5rem,6vw,2.2rem)",fontWeight:700,
-          color:C.ivory,letterSpacing:"0.06em",textTransform:"uppercase",cursor:"pointer",
-          transition:"color .2s,text-shadow .2s"}}
-          onClick={() => { go(l.toLowerCase()); onClose(); }}
-          onMouseEnter={e => { e.target.style.color=C.neonPink; e.target.style.textShadow=GP(0.7); }}
-          onMouseLeave={e => { e.target.style.color=C.ivory;    e.target.style.textShadow="none"; }}>
+          color:C.ivory,letterSpacing:"0.06em",textTransform:"uppercase",cursor:"pointer"}}
+          onClick={() => { go(l.toLowerCase()); onClose(); }}>
           {l}
         </span>
       ))}
@@ -182,12 +195,12 @@ function MobileNav({ open, onClose, go, navItems }) {
 function ContactForm() {
   const [inquiry, setInquiry] = useState(null);
   const [sent,    setSent]    = useState(false);
-
   const selected = INQUIRY_TYPES.find(t => t.label === inquiry);
+
   const inputStyle = {
     width:"100%", padding:"0.7rem 0", border:"none",
     borderBottom:`1px solid rgba(201,168,76,0.25)`, background:"transparent",
-    fontFamily:FONTS.body, fontSize:"1rem", color:C.cream, transition:"border-color .2s",
+    fontFamily:FONTS.body, fontSize:"1rem", color:C.cream,
   };
   const labelStyle = {
     display:"block", fontSize:"0.62rem", letterSpacing:"0.16em",
@@ -207,17 +220,15 @@ function ContactForm() {
       <input type="text" name="_gotcha" style={{display:"none"}}/>
       <div style={{marginBottom:"1.8rem"}}>
         <label style={labelStyle}>Inquiry Type</label>
-        <div style={{display:"flex",gap:"0.6rem",marginTop:"0.4rem",flexWrap:"wrap"}}>
+        <div style={{display:"flex",gap:"0.6rem",marginTop:"0.5rem",flexWrap:"wrap"}}>
           {INQUIRY_TYPES.map(t => (
-            <button key={t.label} type="button"
-              onClick={() => setInquiry(t.label)}
-              style={{padding:"0.5rem 1.2rem",fontFamily:FONTS.ui,fontSize:"0.68rem",
+            <button key={t.label} type="button" onClick={() => setInquiry(t.label)}
+              style={{padding:"0.55rem 1.1rem",fontFamily:FONTS.ui,fontSize:"0.68rem",
                 letterSpacing:"0.12em",textTransform:"uppercase",cursor:"pointer",
                 border:`1px solid ${inquiry===t.label?C.neonPink:C.border}`,
                 background:inquiry===t.label?"rgba(255,62,138,0.1)":"transparent",
                 color:inquiry===t.label?C.neonPink:C.sepia,
-                textShadow:inquiry===t.label?GP(0.6):"none",
-                transition:"all .2s"}}>
+                textShadow:inquiry===t.label?GP(0.6):"none",transition:"all .2s"}}>
               {t.label}
             </button>
           ))}
@@ -225,32 +236,29 @@ function ContactForm() {
         {selected && (
           <div style={{marginTop:"0.8rem",padding:"0.7rem 1rem",
             border:`1px solid rgba(0,212,204,0.2)`,background:"rgba(0,212,204,0.04)"}}>
-            <p style={{fontSize:"0.68rem",color:C.neonCyan,letterSpacing:"0.06em",marginBottom:3,textShadow:GC(0.5)}}>{selected.email}</p>
+            <p style={{fontSize:"0.68rem",color:C.neonCyan,marginBottom:3,textShadow:GC(0.5)}}>{selected.email}</p>
             <p style={{fontSize:"0.65rem",color:C.sepia,fontFamily:FONTS.body,fontStyle:"italic"}}>{selected.desc}</p>
           </div>
         )}
       </div>
-      <div style={{marginBottom:"1.4rem"}}>
-        <label style={labelStyle}>Name</label>
-        <input type="text" placeholder="Your name" required style={inputStyle}/>
-      </div>
-      <div style={{marginBottom:"1.4rem"}}>
-        <label style={labelStyle}>Email</label>
-        <input type="email" placeholder="your@email.com" required style={inputStyle}/>
-      </div>
+      {[["Name","text","Your name"],["Email","email","your@email.com"]].map(([lbl,type,ph]) => (
+        <div key={lbl} style={{marginBottom:"1.4rem"}}>
+          <label style={labelStyle}>{lbl}</label>
+          <input type={type} placeholder={ph} required style={inputStyle}/>
+        </div>
+      ))}
       <div style={{marginBottom:"1.4rem"}}>
         <label style={labelStyle}>Message</label>
         <textarea placeholder="Tell us more..." rows={4} required style={{...inputStyle,resize:"none"}}/>
       </div>
-      <button type="submit" className="submit-btn"
-        disabled={!inquiry}
-        style={{marginTop:"0.8rem",padding:"0.85rem 2.4rem",background:"transparent",
+      <button type="submit" disabled={!inquiry}
+        style={{marginTop:"0.8rem",padding:"0.85rem 2rem",background:"transparent",
           color:inquiry?C.gold:"rgba(201,168,76,0.3)",
           border:`1px solid ${inquiry?C.gold:"rgba(201,168,76,0.3)"}`,
           fontFamily:FONTS.ui,fontSize:"0.7rem",letterSpacing:"0.2em",
           textTransform:"uppercase",fontWeight:500,
           cursor:inquiry?"pointer":"not-allowed",
-          textShadow:inquiry?GG(0.5):"none",transition:"all .2s"}}>
+          textShadow:inquiry?GG(0.5):"none",transition:"all .2s",width:"100%"}}>
         {inquiry ? `Send to ${inquiry}` : "Select an Inquiry Type"}
       </button>
     </form>
@@ -264,6 +272,8 @@ function ContactForm() {
 export default function App() {
   const [intro,    setIntro]    = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const width  = useWindowWidth();
+  const mobile = width < 768;
 
   useScrollReveal();
 
@@ -284,57 +294,19 @@ export default function App() {
     st.textContent = buildCSS() + `
       @keyframes introFade { from{opacity:0.2} to{opacity:1} }
       @keyframes pulseP    { 0%,100%{text-shadow:${GP(0.9)}} 50%{text-shadow:${GP(0.35)}} }
-      .reveal        { opacity:0; transform:translateY(32px); transition:opacity .75s ease,transform .75s ease; }
-      .reveal-left   { opacity:0; transform:translateX(-32px); transition:opacity .75s ease,transform .75s ease; }
-      .reveal-right  { opacity:0; transform:translateX(32px);  transition:opacity .75s ease,transform .75s ease; }
-      .revealed      { opacity:1 !important; transform:translate(0,0) !important; }
-
-      /* Desktop only cursor */
+      .reveal      { opacity:0; transform:translateY(28px); transition:opacity .75s ease,transform .75s ease; }
+      .reveal-left { opacity:0; transform:translateX(-28px); transition:opacity .75s ease,transform .75s ease; }
+      .reveal-right{ opacity:0; transform:translateX(28px);  transition:opacity .75s ease,transform .75s ease; }
+      .revealed    { opacity:1 !important; transform:translate(0,0) !important; }
       @media (pointer: fine) { * { cursor: none !important; } }
-
-      /* ── MOBILE ── */
-      @media (max-width: 768px) {
-        .two-col {
-          grid-template-columns: 1fr !important;
-          gap: 2.5rem !important;
-        }
-        .section-pad {
-          padding: 4rem 1.4rem !important;
-        }
-        .hero-section {
-          padding: 5rem 1.4rem 4rem !important;
-        }
-        .hero-frame-outer {
-          inset: 1rem !important;
-        }
-        .hero-frame-inner {
-          inset: 1.4rem !important;
-        }
-        .nav-desktop-links {
-          display: none !important;
-        }
-        .contact-left {
-          padding-bottom: 1rem;
-        }
-        .artist-img {
-          max-height: 500px;
-          object-fit: cover;
-          object-position: center top;
-        }
-        footer {
-          padding: 2rem 1.4rem !important;
-        }
-        .footer-inner {
-          flex-direction: column !important;
-          align-items: flex-start !important;
-          gap: 1rem !important;
-        }
-      }
     `;
     document.head.appendChild(st);
   }, []);
 
   const go = id => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
+
+  const pad  = mobile ? "1.2rem" : "2.5rem";
+  const secY = mobile ? "4rem"   : "7rem";
 
   return (
     <>
@@ -346,20 +318,23 @@ export default function App() {
 
         {/* ── NAV ── */}
         <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,display:"flex",alignItems:"center",
-          justifyContent:"space-between",padding:"1rem 1.4rem",backdropFilter:"blur(18px)",
+          justifyContent:"space-between",padding:`0.9rem ${pad}`,backdropFilter:"blur(18px)",
           background:"rgba(10,7,5,0.92)",borderBottom:`1px solid ${C.border}`}}>
           <span style={{fontFamily:FONTS.display,fontSize:"1.1rem",fontWeight:700,letterSpacing:"0.1em",
             color:C.gold,textTransform:"uppercase",textShadow:GG(0.5),
             position:"absolute",left:"50%",transform:"translateX(-50%)"}}>
             {BAND_NAME}
           </span>
-          <div className="nav-desktop-links" style={{display:"flex",gap:"2rem"}}>
-            {navItems.map(l => (
-              <span key={l} className="nav-link" style={{fontSize:"0.68rem",fontWeight:500,
-                letterSpacing:"0.18em",textTransform:"uppercase",color:C.sepia}}
-                onClick={() => go(l.toLowerCase())}>{l}</span>
-            ))}
-          </div>
+          {/* desktop links */}
+          {!mobile && (
+            <div style={{display:"flex",gap:"2rem"}}>
+              {navItems.map(l => (
+                <span key={l} className="nav-link" style={{fontSize:"0.68rem",fontWeight:500,
+                  letterSpacing:"0.18em",textTransform:"uppercase",color:C.sepia}}
+                  onClick={() => go(l.toLowerCase())}>{l}</span>
+              ))}
+            </div>
+          )}
           <button onClick={() => setMenuOpen(true)} style={{background:"none",border:"none",cursor:"pointer",
             display:"flex",flexDirection:"column",gap:5,padding:4,marginLeft:"auto"}}>
             {[0,1,2].map(i => <div key={i} style={{width:22,height:1.5,background:C.gold,boxShadow:GG(0.4)}}/>)}
@@ -367,9 +342,8 @@ export default function App() {
         </nav>
 
         {/* ── HERO ── */}
-        <section id="hero" className="hero-section" style={{minHeight:"100vh",display:"flex",flexDirection:"column",
-          justifyContent:"center",alignItems:"center",padding:"6rem 2.5rem 5rem",
-          position:"relative",overflow:"hidden",textAlign:"center"}}>
+        <section id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",
+          alignItems:"center",padding:`6rem ${pad} 4rem`,position:"relative",overflow:"hidden",textAlign:"center"}}>
           <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse 70% 65% at 50% 40%,#2A1A08,${C.bg} 72%)`}}/>
           <div style={{position:"absolute",top:"15%",left:"8%",width:300,height:300,borderRadius:"50%",background:C.neonPink,opacity:0.04,filter:"blur(80px)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:"20%",right:"6%",width:260,height:260,borderRadius:"50%",background:C.neonCyan,opacity:0.05,filter:"blur(70px)",pointerEvents:"none"}}/>
@@ -377,44 +351,47 @@ export default function App() {
             <div style={{position:"absolute",left:0,right:0,height:"3px",background:"rgba(0,212,204,0.018)",animation:"scanline 9s linear infinite"}}/>
           </div>
           <div style={{position:"absolute",inset:0,opacity:0.03,backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",backgroundSize:"180px"}}/>
-          <div className="hero-frame-outer" style={{position:"absolute",inset:"3rem",border:`1px solid ${C.border}`,pointerEvents:"none"}}/>
-          <div className="hero-frame-inner" style={{position:"absolute",inset:"3.4rem",border:`1px solid rgba(201,168,76,0.07)`,pointerEvents:"none"}}/>
-          {[
-            {t:"3rem",l:"3rem",rot:"",             col:C.neonPink,cls:"pulse-p"},
-            {t:"3rem",r:"3rem",rot:"scaleX(-1)",   col:C.neonCyan,cls:"pulse-c"},
-            {b:"3rem",l:"3rem",rot:"scaleY(-1)",   col:C.neonCyan,cls:"pulse-c"},
-            {b:"3rem",r:"3rem",rot:"scale(-1,-1)", col:C.neonPink,cls:"pulse-p"},
-          ].map((o,i) => {
-            const p = {position:"absolute"};
-            if(o.t) p.top=o.t; if(o.b) p.bottom=o.b;
-            if(o.l) p.left=o.l; if(o.r) p.right=o.r;
-            if(o.rot) p.transform=o.rot;
-            return (<svg key={i} className={o.cls} style={{...p,width:32,height:32,filter:`drop-shadow(0 0 5px ${o.col})`}} viewBox="0 0 28 28">
-              <path d="M2 2 L2 14 M2 2 L14 2" fill="none" stroke={o.col} strokeWidth="1.8"/>
-            </svg>);
-          })}
+          {!mobile && <>
+            <div style={{position:"absolute",inset:"3rem",border:`1px solid ${C.border}`,pointerEvents:"none"}}/>
+            <div style={{position:"absolute",inset:"3.4rem",border:`1px solid rgba(201,168,76,0.07)`,pointerEvents:"none"}}/>
+            {[
+              {t:"3rem",l:"3rem",rot:"",             col:C.neonPink,cls:"pulse-p"},
+              {t:"3rem",r:"3rem",rot:"scaleX(-1)",   col:C.neonCyan,cls:"pulse-c"},
+              {b:"3rem",l:"3rem",rot:"scaleY(-1)",   col:C.neonCyan,cls:"pulse-c"},
+              {b:"3rem",r:"3rem",rot:"scale(-1,-1)", col:C.neonPink,cls:"pulse-p"},
+            ].map((o,i) => {
+              const p = {position:"absolute"};
+              if(o.t) p.top=o.t; if(o.b) p.bottom=o.b;
+              if(o.l) p.left=o.l; if(o.r) p.right=o.r;
+              if(o.rot) p.transform=o.rot;
+              return (<svg key={i} className={o.cls} style={{...p,width:32,height:32,filter:`drop-shadow(0 0 5px ${o.col})`}} viewBox="0 0 28 28">
+                <path d="M2 2 L2 14 M2 2 L14 2" fill="none" stroke={o.col} strokeWidth="1.8"/>
+              </svg>);
+            })}
+          </>}
           <div style={{position:"relative",zIndex:2,maxWidth:820,width:"100%"}}>
             <p className="curtain d1 pulse-p" style={{fontSize:"0.68rem",fontWeight:500,letterSpacing:"0.3em",
-              textTransform:"uppercase",color:C.neonPink,marginBottom:"1.6rem"}}>
+              textTransform:"uppercase",color:C.neonPink,marginBottom:"1.4rem"}}>
               ✦ &nbsp; Denver, CO &nbsp; ✦
             </p>
             <h1 className="curtain d2 title-flicker" style={{fontFamily:FONTS.display,
-              fontSize:"clamp(3.5rem,15vw,9rem)",fontWeight:900,lineHeight:0.9,
-              marginBottom:"1.4rem",color:C.ivory,letterSpacing:"0.02em",textTransform:"uppercase"}}>
+              fontSize:mobile?"clamp(3.5rem,18vw,6rem)":"clamp(3.5rem,10vw,9rem)",
+              fontWeight:900,lineHeight:0.9,marginBottom:"1.2rem",color:C.ivory,
+              letterSpacing:"0.02em",textTransform:"uppercase"}}>
               Candy<br/><span style={{color:C.gold,textShadow:GG(0.7)}}>Chic</span>
             </h1>
             <MarqueeDots center/>
-            <p className="curtain d3" style={{fontFamily:FONTS.body,fontSize:"clamp(1rem,3vw,1.25rem)",
-              fontStyle:"italic",color:C.dimText,maxWidth:440,lineHeight:1.75,margin:"0 auto 2.5rem"}}>
+            <p className="curtain d3" style={{fontFamily:FONTS.body,fontSize:"clamp(0.95rem,3vw,1.25rem)",
+              fontStyle:"italic",color:C.dimText,maxWidth:440,lineHeight:1.75,margin:"0 auto 2rem"}}>
               {TAGLINE}
             </p>
-            <div className="curtain d4" style={{display:"flex",gap:"0.8rem",justifyContent:"center",flexWrap:"wrap",padding:"0 1rem"}}>
+            <div className="curtain d4" style={{display:"flex",gap:"0.7rem",justifyContent:"center",flexWrap:"wrap"}}>
               {STREAMING.map(s => (
                 <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
                   className="stream-btn"
-                  style={{padding:"0.7rem 1.2rem",border:`1px solid ${C.border}`,background:"transparent",
-                    color:C.sepia,fontSize:"0.65rem",letterSpacing:"0.1em",textTransform:"uppercase",
-                    cursor:"pointer",fontFamily:FONTS.ui,textDecoration:"none",transition:"all .2s"}}>
+                  style={{padding:"0.65rem 1.1rem",border:`1px solid ${C.border}`,background:"transparent",
+                    color:C.sepia,fontSize:"0.63rem",letterSpacing:"0.1em",textTransform:"uppercase",
+                    fontFamily:FONTS.ui,textDecoration:"none",transition:"all .2s"}}>
                   {s.label}
                 </a>
               ))}
@@ -425,19 +402,27 @@ export default function App() {
         <Divider color="pink"/>
 
         {/* ── ARTIST PHOTO ── */}
-        <section className="section-pad" style={{maxWidth:1060,margin:"0 auto",padding:"5rem 2.5rem"}}>
-          <div className="reveal two-col" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4rem",alignItems:"center"}}>
+        <section style={{maxWidth:1060,margin:"0 auto",padding:`${secY} ${pad}`}}>
+          <div className="reveal" style={{
+            display:"grid",
+            gridTemplateColumns: mobile ? "1fr" : "1fr 1fr",
+            gap: mobile ? "2rem" : "4rem",
+            alignItems:"center",
+          }}>
             <div style={{position:"relative"}}>
-              <img src="/band-photo.jpg" alt="Candy Chic" className="artist-img"
+              <img src="/band-photo.jpg" alt="Candy Chic"
                 style={{width:"100%",display:"block",border:`1px solid ${C.border}`,
-                  filter:"saturate(1.1) contrast(1.05)"}}/>
+                  filter:"saturate(1.1) contrast(1.05)",
+                  maxHeight: mobile ? "420px" : "none",
+                  objectFit: mobile ? "cover" : "unset",
+                  objectPosition:"center top"}}/>
               {[
                 {top:0,left:0},
                 {top:0,right:0,transform:"scaleX(-1)"},
                 {bottom:0,left:0,transform:"scaleY(-1)"},
                 {bottom:0,right:0,transform:"scale(-1,-1)"},
               ].map((pos,i) => (
-                <svg key={i} style={{position:"absolute",...pos,width:28,height:28,
+                <svg key={i} style={{position:"absolute",...pos,width:24,height:24,
                   filter:`drop-shadow(0 0 4px ${i%2===0?C.neonPink:C.neonCyan})`}} viewBox="0 0 28 28">
                   <path d="M2 2 L2 12 M2 2 L12 2" fill="none"
                     stroke={i%2===0?C.neonPink:C.neonCyan} strokeWidth="1.8"/>
@@ -448,18 +433,18 @@ export default function App() {
               <p className="pulse-p" style={{fontSize:"0.62rem",fontWeight:500,letterSpacing:"0.26em",
                 textTransform:"uppercase",color:C.neonPink,marginBottom:"0.8rem"}}>The Artist</p>
               <h2 style={{fontFamily:FONTS.display,fontSize:"clamp(1.8rem,4vw,2.8rem)",
-                fontWeight:700,color:C.ivory,marginBottom:"1.5rem"}}>Candy Chic</h2>
+                fontWeight:700,color:C.ivory,marginBottom:"1.2rem"}}>Candy Chic</h2>
               <p style={{fontFamily:FONTS.body,fontSize:"1.05rem",lineHeight:1.9,
-                color:C.dimText,marginBottom:"1.5rem"}}>
+                color:C.dimText,marginBottom:"1.2rem"}}>
                 Based in Denver, CO — bringing a fresh sound and an unforgettable live experience.
               </p>
               <MarqueeDots/>
-              <div style={{display:"flex",gap:"0.8rem",flexWrap:"wrap",marginTop:"0.5rem"}}>
+              <div style={{display:"flex",gap:"0.7rem",flexWrap:"wrap"}}>
                 {STREAMING.map(s => (
                   <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
                     className="stream-btn"
-                    style={{padding:"0.55rem 1.1rem",border:`1px solid ${C.border}`,
-                      background:"transparent",color:C.sepia,fontSize:"0.65rem",
+                    style={{padding:"0.5rem 1rem",border:`1px solid ${C.border}`,
+                      background:"transparent",color:C.sepia,fontSize:"0.63rem",
                       letterSpacing:"0.1em",textTransform:"uppercase",
                       textDecoration:"none",fontFamily:FONTS.ui,transition:"all .2s"}}>
                     {s.label}
@@ -473,17 +458,22 @@ export default function App() {
         <Divider color="cyan"/>
 
         {/* ── CONTACT ── */}
-        <section id="contact" className="section-pad" style={{padding:"7rem 2.5rem",position:"relative",overflow:"hidden"}}>
+        <section id="contact" style={{padding:`${secY} ${pad}`,position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",bottom:0,left:"5%",width:350,height:350,borderRadius:"50%",
             background:C.neonCyan,opacity:0.04,filter:"blur(80px)",pointerEvents:"none"}}/>
-          <div className="two-col" style={{maxWidth:1060,margin:"0 auto",display:"grid",
-            gridTemplateColumns:"1fr 1fr",gap:"5rem",alignItems:"start",position:"relative"}}>
-            <div className="reveal reveal-left contact-left">
+          <div style={{
+            maxWidth:1060, margin:"0 auto", position:"relative",
+            display:"grid",
+            gridTemplateColumns: mobile ? "1fr" : "1fr 1fr",
+            gap: mobile ? "3rem" : "5rem",
+            alignItems:"start",
+          }}>
+            <div className="reveal reveal-left">
               <p className="pulse-p" style={{fontSize:"0.62rem",fontWeight:500,letterSpacing:"0.26em",
                 textTransform:"uppercase",color:C.neonPink,marginBottom:"0.8rem"}}>Get in Touch</p>
               <h2 style={{fontFamily:FONTS.display,fontSize:"clamp(1.8rem,4vw,2.8rem)",fontWeight:700,
-                marginBottom:"1.5rem",color:C.ivory}}>Booking &<br/>Inquiries</h2>
-              <p style={{fontFamily:FONTS.body,fontSize:"1.05rem",color:C.sepia,lineHeight:1.85,marginBottom:"2rem"}}>
+                marginBottom:"1.2rem",color:C.ivory}}>Booking &<br/>Inquiries</h2>
+              <p style={{fontFamily:FONTS.body,fontSize:"1.05rem",color:C.sepia,lineHeight:1.85,marginBottom:"1.8rem"}}>
                 Based in Denver, CO — available for shows, press, and collaborations. Reach out and we'll get back to you within 48 hours.
               </p>
               <MarqueeDots/>
@@ -495,7 +485,7 @@ export default function App() {
                   <a href={`mailto:${val}`} style={{color:C.dimText,textDecoration:"none"}}>{val}</a>
                 </p>
               ))}
-              <div style={{display:"flex",gap:"1rem",marginTop:"2rem",flexWrap:"wrap"}}>
+              <div style={{display:"flex",gap:"0.8rem",marginTop:"1.8rem",flexWrap:"wrap"}}>
                 {SOCIALS.map(s => (
                   <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
                     className="social-link"
@@ -514,10 +504,10 @@ export default function App() {
         </section>
 
         {/* ── FOOTER ── */}
-        <footer style={{background:C.surface,padding:"2.5rem",borderTop:`1px solid rgba(255,62,138,0.2)`}}>
+        <footer style={{background:C.surface,padding:`2rem ${pad}`,borderTop:`1px solid rgba(255,62,138,0.2)`}}>
           <div style={{maxWidth:1060,margin:"0 auto"}}>
-            <div className="footer-inner" style={{display:"flex",alignItems:"center",
-              justifyContent:"space-between",marginBottom:"1.5rem",flexWrap:"wrap",gap:"1rem"}}>
+            <div style={{display:"flex",flexDirection: mobile?"column":"row",alignItems: mobile?"flex-start":"center",
+              justifyContent:"space-between",marginBottom:"1.2rem",gap:"1rem"}}>
               <span style={{fontFamily:FONTS.display,color:C.gold,fontSize:"0.95rem",fontWeight:700,
                 letterSpacing:"0.08em",textTransform:"uppercase",textShadow:GG(0.5)}}>{BAND_NAME}</span>
               <div style={{display:"flex",gap:8,alignItems:"center"}}>
@@ -526,7 +516,7 @@ export default function App() {
                     boxShadow:col===C.goldDim?"none":`0 0 6px ${col}`,opacity:col===C.goldDim?0.4:0.9}}/>
                 ))}
               </div>
-              <div style={{display:"flex",gap:"1.3rem",flexWrap:"wrap"}}>
+              <div style={{display:"flex",gap:"1rem",flexWrap:"wrap"}}>
                 {SOCIALS.map(s => (
                   <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
                     className="social-link" style={{color:C.sepia,textDecoration:"none",
@@ -536,10 +526,10 @@ export default function App() {
                 ))}
               </div>
             </div>
-            <div style={{borderTop:`1px solid ${C.border}`,paddingTop:"1.2rem",display:"flex",
+            <div style={{borderTop:`1px solid ${C.border}`,paddingTop:"1rem",display:"flex",
               justifyContent:"space-between",flexWrap:"wrap",gap:"0.5rem"}}>
-              <span style={{fontSize:"0.65rem",color:C.sepia,letterSpacing:"0.08em"}}>© 2026 Candy Chic · All rights reserved</span>
-              <span style={{fontSize:"0.65rem",color:C.sepia,letterSpacing:"0.08em"}}>Denver, CO</span>
+              <span style={{fontSize:"0.65rem",color:C.sepia}}>© 2026 Candy Chic · All rights reserved</span>
+              <span style={{fontSize:"0.65rem",color:C.sepia}}>Denver, CO</span>
             </div>
           </div>
         </footer>
