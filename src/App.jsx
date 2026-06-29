@@ -349,9 +349,7 @@ export default function App() {
         {/* ── HERO ── */}
         <section id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",
           alignItems:"center",padding:"6rem 2.5rem 5rem",position:"relative",overflow:"hidden",textAlign:"center"}}>
-          <div style={{position:"absolute",inset:0,backgroundImage:"url('/band-photo.jpg')",
-          backgroundSize:"cover",backgroundPosition:"center top",filter:"saturate(1.05)"}}/>
-          <div style={{position:"absolute",inset:0,background:"rgba(10,7,5,0.78)"}}/>
+          <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse 70% 65% at 50% 40%,#2A1A08,${C.bg} 72%)`}}/>
           <div style={{position:"absolute",top:"15%",left:"8%",width:300,height:300,borderRadius:"50%",background:C.neonPink,opacity:0.04,filter:"blur(80px)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:"20%",right:"6%",width:260,height:260,borderRadius:"50%",background:C.neonCyan,opacity:0.05,filter:"blur(70px)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none",zIndex:1}}>
