@@ -94,16 +94,31 @@ function IntroScreen({ onDone }) {
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
   return (
-    <div style={{position:"fixed",inset:0,zIndex:999,background:C.bg,display:"flex",flexDirection:"column",
-      alignItems:"center",justifyContent:"center",opacity:fade?0:1,transition:"opacity .7s ease",pointerEvents:fade?"none":"all"}}>
-      <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse 60% 60% at 50% 50%,#2A1A08,${C.bg})`}}/>
+    <div style={{position:"fixed",inset:0,zIndex:999,display:"flex",flexDirection:"column",
+      alignItems:"center",justifyContent:"center",opacity:fade?0:1,
+      transition:"opacity .7s ease",pointerEvents:fade?"none":"all"}}>
+      {/* full bleed photo */}
+      <div style={{position:"absolute",inset:0,backgroundImage:"url('/band-photo.jpg')",
+        backgroundSize:"cover",backgroundPosition:"center top",filter:"saturate(1.1)"}}/>
+      {/* dark overlay */}
+      <div style={{position:"absolute",inset:0,background:"rgba(10,7,5,0.72)"}}/>
+      {/* film grain */}
+      <div style={{position:"absolute",inset:0,opacity:0.04,
+        backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        backgroundSize:"180px"}}/>
+      {/* vignette */}
+      <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(10,7,5,0.8) 100%)"}}/>
+      {/* content */}
       <p style={{fontFamily:FONTS.ui,fontSize:"0.65rem",letterSpacing:"0.35em",textTransform:"uppercase",
         color:C.neonPink,textShadow:GP(0.9),marginBottom:"1.5rem",position:"relative",
         animation:"pulseP 2.8s ease-in-out infinite"}}>✦ &nbsp; Now Presenting &nbsp; ✦</p>
       <h1 style={{fontFamily:FONTS.display,fontSize:"clamp(2.5rem,8vw,6rem)",fontWeight:900,
         color:C.ivory,textTransform:"uppercase",letterSpacing:"0.06em",lineHeight:1,
-        position:"relative",textAlign:"center"}}>{BAND_NAME}</h1>
-      <div style={{width:120,height:1,background:`linear-gradient(90deg,transparent,${C.gold},transparent)`,margin:"2rem auto",opacity:0.6}}/>
+        position:"relative",textAlign:"center",textShadow:"0 2px 40px rgba(0,0,0,0.8)"}}>
+        {BAND_NAME}
+      </h1>
+      <div style={{width:120,height:1,background:`linear-gradient(90deg,transparent,${C.gold},transparent)`,
+        margin:"2rem auto",opacity:0.6,position:"relative"}}/>
       <div style={{display:"flex",gap:6,position:"relative"}}>
         {[0,1,2].map(i => (
           <div key={i} style={{width:5,height:5,borderRadius:"50%",background:C.gold,
@@ -341,7 +356,9 @@ export default function App() {
         {/* ── HERO ── */}
         <section id="hero" style={{minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"center",
           alignItems:"center",padding:"6rem 2.5rem 5rem",position:"relative",overflow:"hidden",textAlign:"center"}}>
-          <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse 70% 65% at 50% 40%,#2A1A08,${C.bg} 72%)`}}/>
+          <div style={{position:"absolute",inset:0,backgroundImage:"url('/band-photo.jpg')",
+          backgroundSize:"cover",backgroundPosition:"center top",filter:"saturate(1.05)"}}/>
+          <div style={{position:"absolute",inset:0,background:"rgba(10,7,5,0.78)"}}/>
           <div style={{position:"absolute",top:"15%",left:"8%",width:300,height:300,borderRadius:"50%",background:C.neonPink,opacity:0.04,filter:"blur(80px)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",bottom:"20%",right:"6%",width:260,height:260,borderRadius:"50%",background:C.neonCyan,opacity:0.05,filter:"blur(70px)",pointerEvents:"none"}}/>
           <div style={{position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none",zIndex:1}}>
