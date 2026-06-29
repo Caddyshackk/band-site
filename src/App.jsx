@@ -100,10 +100,6 @@ function IntroScreen({ onDone }) {
       {/* full bleed photo */}
       <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse 70% 65% at 50% 40%,#2A1A08,${C.bg} 72%)`}}/>
       {/* film grain */}
-      <div style={{position:"absolute",inset:0,opacity:0.04,
-        backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        backgroundSize:"180px"}}/>
-      {/* vignette */}
       <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse 70% 70% at 50% 50%, transparent 40%, rgba(10,7,5,0.8) 100%)"}}/>
       {/* content */}
       <p style={{fontFamily:FONTS.ui,fontSize:"0.65rem",letterSpacing:"0.35em",textTransform:"uppercase",
