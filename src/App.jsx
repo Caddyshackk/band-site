@@ -98,10 +98,7 @@ function IntroScreen({ onDone }) {
       alignItems:"center",justifyContent:"center",opacity:fade?0:1,
       transition:"opacity .7s ease",pointerEvents:fade?"none":"all"}}>
       {/* full bleed photo */}
-      <div style={{position:"absolute",inset:0,backgroundImage:"url('/band-photo.jpg')",
-        backgroundSize:"cover",backgroundPosition:"center top",filter:"saturate(1.1)"}}/>
-      {/* dark overlay */}
-      <div style={{position:"absolute",inset:0,background:"rgba(10,7,5,0.72)"}}/>
+      <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse 70% 65% at 50% 40%,#2A1A08,${C.bg} 72%)`}}/>
       {/* film grain */}
       <div style={{position:"absolute",inset:0,opacity:0.04,
         backgroundImage:"url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
