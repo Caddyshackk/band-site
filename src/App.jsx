@@ -411,7 +411,59 @@ export default function App() {
         </section>
 
         <Divider color="pink"/>
+        {/* ── ARTIST PHOTO ── */}
+        <section style={{maxWidth:1060,margin:"0 auto",padding:"5rem 2.5rem"}}>
+          <div className="reveal" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"4rem",alignItems:"center"}}>
+            <div style={{position:"relative"}}>
+              <img src="/band-photo.jpg" alt="Candy Chic"
+                style={{width:"100%",display:"block",border:`1px solid ${C.border}`,
+                  filter:"saturate(1.1) contrast(1.05)"}}/>
+              {/* neon corner accents */}
+              {[
+                {top:0,left:0},
+                {top:0,right:0,transform:"scaleX(-1)"},
+                {bottom:0,left:0,transform:"scaleY(-1)"},
+                {bottom:0,right:0,transform:"scale(-1,-1)"},
+              ].map((pos,i)=>(
+                <svg key={i} style={{position:"absolute",...pos,width:28,height:28,
+                  filter:`drop-shadow(0 0 4px ${i%2===0?C.neonPink:C.neonCyan})`}}
+                  viewBox="0 0 28 28">
+                  <path d="M2 2 L2 12 M2 2 L12 2" fill="none"
+                    stroke={i%2===0?C.neonPink:C.neonCyan} strokeWidth="1.8"/>
+                </svg>
+              ))}
+            </div>
+            <div>
+              <p className="pulse-p" style={{fontSize:"0.62rem",fontWeight:500,letterSpacing:"0.26em",
+                textTransform:"uppercase",color:C.neonPink,marginBottom:"0.8rem"}}>
+                The Artist
+              </p>
+              <h2 style={{fontFamily:FONTS.display,fontSize:"clamp(1.8rem,3.2vw,2.8rem)",
+                fontWeight:700,color:C.ivory,marginBottom:"1.5rem"}}>
+                Candy Chic
+              </h2>
+              <p style={{fontFamily:FONTS.body,fontSize:"1.1rem",lineHeight:1.9,
+                color:C.dimText,marginBottom:"1.5rem"}}>
+                Based in Denver, CO — bringing a fresh sound and an unforgettable live experience.
+              </p>
+              <MarqueeDots/>
+              <div style={{display:"flex",gap:"0.8rem",flexWrap:"wrap",marginTop:"0.5rem"}}>
+                {STREAMING.map(s=>(
+                  <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
+                    className="stream-btn"
+                    style={{padding:"0.55rem 1.2rem",border:`1px solid ${C.border}`,
+                      background:"transparent",color:C.sepia,fontSize:"0.68rem",
+                      letterSpacing:"0.12em",textTransform:"uppercase",
+                      textDecoration:"none",fontFamily:FONTS.ui,transition:"all .2s"}}>
+                    {s.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
+        <Divider color="cyan"/>
         {/* ── CONTACT ── */}
         <section id="contact" style={{padding:"7rem 2.5rem",position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",bottom:0,left:"5%",width:350,height:350,borderRadius:"50%",
