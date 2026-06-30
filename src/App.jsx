@@ -420,7 +420,19 @@ export default function App() {
                 </a>
               ))}
             </div>
-
+            
+            {/* streaming links */}
+            <div className="curtain d4" style={{display:"flex",gap:"0.7rem",justifyContent:"center",flexWrap:"wrap"}}>
+              {STREAMING.map(s => (
+                <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
+                  className="stream-btn"
+                  style={{padding:"0.55rem 1.2rem",border:`1px solid ${C.border}`,background:"transparent",
+                    color:C.sepia,fontSize:"0.63rem",letterSpacing:"0.1em",textTransform:"uppercase",
+                    fontFamily:FONTS.ui,textDecoration:"none",transition:"all .2s"}}>
+                  {s.label}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 
