@@ -63,7 +63,7 @@ function useScrollReveal() {
 }
 
 function useIsTouch() {
-  const [touch, setTouch] = useState(true);
+  const [touch, setTouch] = useState(false);
   useEffect(() => {
     setTouch(window.matchMedia("(pointer: coarse)").matches);
   }, []);
@@ -141,8 +141,8 @@ function CustomCursor() {
     window.addEventListener("mousemove", onMove);
     let raf;
     const tick = () => {
-      cur.current.x += (pos.current.x - cur.current.x) * 0.95;
-      cur.current.y += (pos.current.y - cur.current.y) * 0.95;
+      cur.current.x += (pos.current.x - cur.current.x) * 0.25;
+      cur.current.y += (pos.current.y - cur.current.y) * 0.25;
       if (ringRef.current) ringRef.current.style.transform = `translate(${cur.current.x-16}px,${cur.current.y-16}px)`;
       if (dotRef.current)  dotRef.current.style.transform  = `translate(${pos.current.x-3}px,${pos.current.y-3}px)`;
       raf = requestAnimationFrame(tick);
@@ -369,89 +369,58 @@ export default function App() {
               </svg>);
             })}
           </>}
-          <div style={{position:"relative",zIndex:2,maxWidth:820,width:"100%"}}>
-            <p className="curtain d1 pulse-p" style={{fontSize:"0.68rem",fontWeight:500,letterSpacing:"0.3em",
-              textTransform:"uppercase",color:C.neonPink,marginBottom:"1.4rem"}}>
-              ✦ &nbsp; Denver, CO &nbsp; ✦
-            </p>
-            <h1 className="curtain d2 title-flicker" style={{fontFamily:FONTS.display,
-              fontSize:mobile?"clamp(3.5rem,18vw,6rem)":"clamp(3.5rem,10vw,9rem)",
-              fontWeight:900,lineHeight:0.9,marginBottom:"1.2rem",color:C.ivory,
-              letterSpacing:"0.02em",textTransform:"uppercase"}}>
-              Candy<br/><span style={{color:C.gold,textShadow:GG(0.7)}}>Chic</span>
-            </h1>
-            <MarqueeDots center/>
-            <p className="curtain d3" style={{fontFamily:FONTS.body,fontSize:"clamp(0.95rem,3vw,1.25rem)",
-              fontStyle:"italic",color:C.dimText,maxWidth:440,lineHeight:1.75,margin:"0 auto 2rem"}}>
-              {TAGLINE}
-            </p>
-            <div className="curtain d4" style={{display:"flex",gap:"0.7rem",justifyContent:"center",flexWrap:"wrap"}}>
-              {STREAMING.map(s => (
-                <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
-                  className="stream-btn"
-                  style={{padding:"0.65rem 1.1rem",border:`1px solid ${C.border}`,background:"transparent",
-                    color:C.sepia,fontSize:"0.63rem",letterSpacing:"0.1em",textTransform:"uppercase",
-                    fontFamily:FONTS.ui,textDecoration:"none",transition:"all .2s"}}>
-                  {s.label}
-                </a>
-              ))}
+
+          {/* minimalist centered layout */}
+          <div style={{position:"relative",zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",gap:"1.8rem",width:"100%"}}>
+
+            {/* small title above photo */}
+            <div className="curtain d1">
+              <p style={{fontSize:"0.62rem",letterSpacing:"0.3em",textTransform:"uppercase",
+                color:C.neonPink,fontFamily:FONTS.ui,marginBottom:"0.6rem",
+                animation:"pulseP 2.8s ease-in-out infinite"}}>✦ &nbsp; Denver, CO &nbsp; ✦</p>
+              <h1 className="title-flicker" style={{fontFamily:FONTS.display,
+                fontSize:mobile?"clamp(1.4rem,6vw,2rem)":"clamp(1.4rem,3vw,2.2rem)",
+                fontWeight:700,lineHeight:1.1,color:C.ivory,letterSpacing:"0.12em",
+                textTransform:"uppercase"}}>
+                Candy &nbsp;<span style={{color:C.gold,textShadow:GG(0.6)}}>Chic</span>
+              </h1>
             </div>
-          </div>
-        </section>
 
-        <Divider color="pink"/>
-
-        {/* ── ARTIST PHOTO ── */}
-        <section style={{maxWidth:1060,margin:"0 auto",padding:`${secY} ${pad}`}}>
-          <div className="reveal" style={{
-            display:"grid",
-            gridTemplateColumns: mobile ? "1fr" : "1fr 1fr",
-            gap: mobile ? "2rem" : "4rem",
-            alignItems:"center",
-          }}>
-            <div style={{position:"relative"}}>
+            {/* centered band photo */}
+            <div className="curtain d2" style={{position:"relative",width:mobile?"90%":"42%",maxWidth:480}}>
               <img src="/band-photo.jpg" alt="Candy Chic"
                 style={{width:"100%",display:"block",border:`1px solid ${C.border}`,
                   filter:"saturate(1.1) contrast(1.05)",
-                  maxHeight: mobile ? "420px" : "none",
-                  objectFit: mobile ? "cover" : "unset",
-                  objectPosition:"center top"}}/>
+                  boxShadow:`0 0 60px rgba(255,62,138,0.12), 0 0 120px rgba(0,0,0,0.6)`}}/>
+              {/* neon corner accents */}
               {[
                 {top:0,left:0},
                 {top:0,right:0,transform:"scaleX(-1)"},
                 {bottom:0,left:0,transform:"scaleY(-1)"},
                 {bottom:0,right:0,transform:"scale(-1,-1)"},
               ].map((pos,i) => (
-                <svg key={i} style={{position:"absolute",...pos,width:24,height:24,
+                <svg key={i} style={{position:"absolute",...pos,width:22,height:22,
                   filter:`drop-shadow(0 0 4px ${i%2===0?C.neonPink:C.neonCyan})`}} viewBox="0 0 28 28">
                   <path d="M2 2 L2 12 M2 2 L12 2" fill="none"
-                    stroke={i%2===0?C.neonPink:C.neonCyan} strokeWidth="1.8"/>
+                    stroke={i%2===0?C.neonPink:C.neonCyan} strokeWidth="2"/>
                 </svg>
               ))}
             </div>
-            <div>
-              <p className="pulse-p" style={{fontSize:"0.62rem",fontWeight:500,letterSpacing:"0.26em",
-                textTransform:"uppercase",color:C.neonPink,marginBottom:"0.8rem"}}>The Artist</p>
-              <h2 style={{fontFamily:FONTS.display,fontSize:"clamp(1.8rem,4vw,2.8rem)",
-                fontWeight:700,color:C.ivory,marginBottom:"1.2rem"}}>Candy Chic</h2>
-              <p style={{fontFamily:FONTS.body,fontSize:"1.05rem",lineHeight:1.9,
-                color:C.dimText,marginBottom:"1.2rem"}}>
-                Based in Denver, CO — bringing a fresh sound and an unforgettable live experience.
-              </p>
-              <MarqueeDots/>
-              <div style={{display:"flex",gap:"0.7rem",flexWrap:"wrap"}}>
-                {STREAMING.map(s => (
-                  <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
-                    className="stream-btn"
-                    style={{padding:"0.5rem 1rem",border:`1px solid ${C.border}`,
-                      background:"transparent",color:C.sepia,fontSize:"0.63rem",
-                      letterSpacing:"0.1em",textTransform:"uppercase",
-                      textDecoration:"none",fontFamily:FONTS.ui,transition:"all .2s"}}>
-                    {s.label}
-                  </a>
-                ))}
-              </div>
+
+            {/* social links with vibrant gold border */}
+            <div className="curtain d3" style={{display:"flex",gap:"0.8rem",justifyContent:"center",flexWrap:"wrap"}}>
+              {SOCIALS.map(s => (
+                <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
+                  className="social-link"
+                  style={{padding:"0.7rem 2rem",border:`1px solid ${C.gold}`,background:"transparent",
+                    color:C.gold,fontSize:"0.68rem",letterSpacing:"0.18em",textTransform:"uppercase",
+                    fontFamily:FONTS.ui,textDecoration:"none",transition:"all .2s",
+                    textShadow:GG(0.4),boxShadow:`0 0 12px rgba(201,168,76,0.15)`}}>
+                  {s.label}
+                </a>
+              ))}
             </div>
+
           </div>
         </section>
 
@@ -490,8 +459,9 @@ export default function App() {
                   <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
                     className="social-link"
                     style={{fontSize:"0.68rem",letterSpacing:"0.14em",textTransform:"uppercase",
-                      color:C.sepia,textDecoration:"none",border:`1px solid ${C.border}`,
-                      padding:"0.5rem 1rem",transition:"color .2s,text-shadow .2s"}}>
+                      color:C.gold,textDecoration:"none",border:`1px solid ${C.gold}`,
+                      padding:"0.5rem 1rem",transition:"color .2s,text-shadow .2s",
+                      textShadow:GG(0.4),boxShadow:`0 0 10px rgba(201,168,76,0.12)`}}>
                     {s.label}
                   </a>
                 ))}
