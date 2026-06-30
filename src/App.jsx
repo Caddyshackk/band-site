@@ -426,9 +426,10 @@ export default function App() {
               {STREAMING.map(s => (
                 <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
                   className="stream-btn"
-                  style={{padding:"0.55rem 1.2rem",border:`1px solid ${C.border}`,background:"transparent",
-                    color:C.sepia,fontSize:"0.63rem",letterSpacing:"0.1em",textTransform:"uppercase",
-                    fontFamily:FONTS.ui,textDecoration:"none",transition:"all .2s"}}>
+                  style={{padding:"0.7rem 2rem",border:`1px solid ${C.gold}`,background:"transparent",
+                    color:C.gold,fontSize:"0.68rem",letterSpacing:"0.18em",textTransform:"uppercase",
+                    fontFamily:FONTS.ui,textDecoration:"none",transition:"all .2s",
+                    textShadow:GG(0.4),boxShadow:`0 0 12px rgba(201,168,76,0.15)`}}>
                   {s.label}
                 </a>
               ))}
