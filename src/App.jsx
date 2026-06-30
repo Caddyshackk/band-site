@@ -374,12 +374,10 @@ export default function App() {
           <div style={{position:"relative",zIndex:2,display:"flex",flexDirection:"column",alignItems:"center",gap:"1.8rem",width:"100%"}}>
 
             {/* small title above photo */}
-            <div className="curtain d1">
-              <p style={{fontSize:"0.62rem",letterSpacing:"0.3em",textTransform:"uppercase",
-                color:C.neonPink,fontFamily:FONTS.ui,marginBottom:"0.6rem",
-                animation:"pulseP 2.8s ease-in-out infinite"}}>✦ &nbsp; Denver, CO &nbsp; ✦</p>
+            <div className="curtain d1" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"0.8rem"}}>
+              <MarqueeDots center/>
               <h1 className="title-flicker" style={{fontFamily:FONTS.display,
-                fontSize:mobile?"clamp(1.4rem,6vw,2rem)":"clamp(1.4rem,3vw,2.2rem)",
+                fontSize:mobile?"clamp(2.2rem,10vw,3.5rem)":"clamp(2.5rem,5vw,4rem)",
                 fontWeight:700,lineHeight:1.1,color:C.ivory,letterSpacing:"0.12em",
                 textTransform:"uppercase"}}>
                 Candy &nbsp;<span style={{color:C.gold,textShadow:GG(0.6)}}>Chic</span>
