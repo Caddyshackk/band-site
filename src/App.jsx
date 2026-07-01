@@ -54,8 +54,8 @@ function useWindowWidth() {
 function useScrollReveal() {
 // Preload gallery photos
   useEffect(() => {
-    ["/gallery-1.jpg","/gallery-2.jpg","/gallery-3.jpg",
-     "/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg"].forEach(src => {
+    ["/gallery-1.jpg","/gallery-2.webp","/gallery-3.jpg",
+     "/gallery-4.webp","/gallery-5.jpg","/gallery-6.jpg"].forEach(src => {
       const img = new Image();
       img.src = src;
     });
@@ -180,8 +180,12 @@ function MobileNav({ open, onClose, go, navItems }) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const intervalRef = useRef(null);
   const photos = [
-    "/gallery-1.jpg","/gallery-2.webp","/gallery-3.jpg",
-    "/gallery-4.webp","/gallery-5.jpg","/gallery-6.jpg",
+    { src:"/gallery-1.jpg", pos:"center top" },
+    { src:"/gallery-2.webp", pos:"center 20%" },
+    { src:"/gallery-3.jpg",  pos:"center top" },
+    { src:"/gallery-4.webp", pos:"center 20%" },
+    { src:"/gallery-5.jpg",  pos:"center top" },
+    { src:"/gallery-6.jpg",  pos:"center top" },
   ];
 
   useEffect(() => {
@@ -205,7 +209,7 @@ function MobileNav({ open, onClose, go, navItems }) {
           position:"absolute",inset:0,
           backgroundImage:`url(${src})`,
           backgroundSize:"cover",
-          backgroundPosition:"center top",
+          backgroundPosition:"center",
           opacity: i === photoIdx ? 1 : 0,
           transition:"opacity 0.6s ease",
           filter:"saturate(0.9) brightness(0.95)",
