@@ -63,7 +63,7 @@ function useScrollReveal() {
 }
 
 function useIsTouch() {
-  const [touch, setTouch] = useState(false);
+  const [touch, setTouch] = useState(true);
   useEffect(() => {
     setTouch(window.matchMedia("(pointer: coarse)").matches);
   }, []);
@@ -195,15 +195,15 @@ function MobileNav({ open, onClose, go, navItems }) {
   return (
     <div style={{position:"fixed",inset:0,zIndex:150,display:"flex",flexDirection:"column",
       alignItems:"center",justifyContent:"center",gap:"2rem",overflow:"hidden"}}>
-      {photos.map((src,i) => (
-        <div key={src} style={{
+      {photos.map((photo,i) => (
+        <div key={photo.src} style={{
           position:"absolute",inset:0,
-          backgroundImage:`url(${src})`,
+          backgroundImage:`url(${photo.src})`,
           backgroundSize:"cover",
-          backgroundPosition:"center",
+          backgroundPosition:photo.pos,
           opacity: i === photoIdx ? 1 : 0,
           transition:"opacity 0.6s ease",
-          filter:"saturate(0.9) brightness(0.95)",
+          filter:"saturate(0.9) brightness(0.55)",
           willChange:"opacity",
         }}/>
       ))}
