@@ -141,8 +141,8 @@ function CustomCursor() {
     window.addEventListener("mousemove", onMove);
     let raf;
     const tick = () => {
-      cur.current.x += (pos.current.x - cur.current.x) * 0.25;
-      cur.current.y += (pos.current.y - cur.current.y) * 0.25;
+      cur.current.x += (pos.current.x - cur.current.x) * 0.95;
+      cur.current.y += (pos.current.y - cur.current.y) * 0.95;
       if (ringRef.current) ringRef.current.style.transform = `translate(${cur.current.x-16}px,${cur.current.y-16}px)`;
       if (dotRef.current)  dotRef.current.style.transform  = `translate(${pos.current.x-3}px,${pos.current.y-3}px)`;
       raf = requestAnimationFrame(tick);
@@ -465,18 +465,7 @@ export default function App() {
                   <a href={`mailto:${val}`} style={{color:C.dimText,textDecoration:"none"}}>{val}</a>
                 </p>
               ))}
-              <div style={{display:"flex",gap:"0.8rem",marginTop:"1.8rem",flexWrap:"wrap"}}>
-                {SOCIALS.map(s => (
-                  <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
-                    className="social-link"
-                    style={{fontSize:"0.68rem",letterSpacing:"0.14em",textTransform:"uppercase",
-                      color:C.gold,textDecoration:"none",border:`1px solid ${C.gold}`,
-                      padding:"0.5rem 1rem",transition:"color .2s,text-shadow .2s",
-                      textShadow:GG(0.4),boxShadow:`0 0 10px rgba(201,168,76,0.12)`}}>
-                    {s.label}
-                  </a>
-                ))}
-              </div>
+              
             </div>
             <div className="reveal reveal-right">
               <ContactForm/>
@@ -495,15 +484,6 @@ export default function App() {
                 {[C.neonPink,C.goldDim,C.neonCyan,C.neonPink,C.neonCyan,C.goldDim,C.neonPink].map((col,i) => (
                   <div key={i} style={{width:5,height:5,borderRadius:"50%",background:col,
                     boxShadow:col===C.goldDim?"none":`0 0 6px ${col}`,opacity:col===C.goldDim?0.4:0.9}}/>
-                ))}
-              </div>
-              <div style={{display:"flex",gap:"1rem",flexWrap:"wrap"}}>
-                {SOCIALS.map(s => (
-                  <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer"
-                    className="social-link" style={{color:C.sepia,textDecoration:"none",
-                      fontSize:"0.65rem",letterSpacing:"0.1em",textTransform:"uppercase"}}>
-                    {s.label}
-                  </a>
                 ))}
               </div>
             </div>
