@@ -375,8 +375,6 @@ export default function App() {
 
       <div style={{background:C.bg,color:C.cream,fontFamily:FONTS.ui,minHeight:"100vh",overflowX:"hidden"}}>
 
-      <div style={{background:C.bg,color:C.cream,fontFamily:FONTS.ui,minHeight:"100vh",overflowX:"hidden"}}>
-
         {/* invisible photo preloader */}
         <div style={{position:"fixed",width:1,height:1,overflow:"hidden",opacity:0,pointerEvents:"none",zIndex:-1}}>
           {["/gallery-1.webp","/gallery-2.webp","/gallery-3.jpg","/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg"].map(src => (
