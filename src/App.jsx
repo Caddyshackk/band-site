@@ -377,7 +377,7 @@ export default function App() {
 
         {/* invisible photo preloader */}
         <div style={{position:"fixed",width:1,height:1,overflow:"hidden",opacity:0,pointerEvents:"none",zIndex:-1}}>
-          {["/gallery-1.webp","/gallery-2.webp","/gallery-3.jpg","/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg"].map(src => (
+          {["/gallery-1.jpg","/gallery-2.webp","/gallery-3.jpg","/gallery-4.webp","/gallery-5.jpg","/gallery-6.jpg"].map(src => (
             <div key={src} style={{width:1,height:1,backgroundImage:`url(${src})`,backgroundSize:"cover"}}/>
           ))}
         </div>
