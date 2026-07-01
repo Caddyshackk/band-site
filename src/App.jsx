@@ -180,8 +180,8 @@ function MobileNav({ open, onClose, go, navItems }) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const intervalRef = useRef(null);
   const photos = [
-    "/gallery-1.jpg","/gallery-2.jpg","/gallery-3.jpg",
-    "/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg",
+    "/gallery-1.jpg","/gallery-2.webp","/gallery-3.jpg",
+    "/gallery-4.webp","/gallery-5.jpg","/gallery-6.jpg",
   ];
 
   useEffect(() => {
