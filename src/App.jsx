@@ -207,7 +207,7 @@ function MobileNav({ open, onClose, go, navItems }) {
           backgroundSize:"cover",
           backgroundPosition:"center",
           opacity: i === photoIdx ? 1 : 0,
-          transition:"opacity 1.5s ease",
+          transition:"opacity 0.6s ease",
           filter:"saturate(0.9) brightness(0.95)",
           willChange:"opacity",
         }}/>
@@ -374,6 +374,15 @@ export default function App() {
       <MobileNav open={menuOpen} onClose={() => setMenuOpen(false)} go={go} navItems={navItems}/>
 
       <div style={{background:C.bg,color:C.cream,fontFamily:FONTS.ui,minHeight:"100vh",overflowX:"hidden"}}>
+
+      <div style={{background:C.bg,color:C.cream,fontFamily:FONTS.ui,minHeight:"100vh",overflowX:"hidden"}}>
+
+        {/* invisible photo preloader */}
+        <div style={{position:"fixed",width:1,height:1,overflow:"hidden",opacity:0,pointerEvents:"none",zIndex:-1}}>
+          {["/gallery-1.webp","/gallery-2.webp","/gallery-3.jpg","/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg"].map(src => (
+            <div key={src} style={{width:1,height:1,backgroundImage:`url(${src})`,backgroundSize:"cover"}}/>
+          ))}
+        </div>
 
         {/* ── NAV ── */}
         <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,display:"flex",alignItems:"center",
