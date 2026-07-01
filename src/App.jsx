@@ -195,7 +195,7 @@ function MobileNav({ open, onClose, go, navItems }) {
           backgroundPosition:"center",
           opacity: i === photoIdx ? 1 : 0,
           transition:"opacity 1.2s ease",
-          filter:"saturate(0.7) brightness(0.35)",
+          filter:"saturate(0.9) brightness(0.55)",
         }}/>
       ))}
 
@@ -211,20 +211,6 @@ function MobileNav({ open, onClose, go, navItems }) {
       <button onClick={onClose} style={{position:"absolute",top:"1.5rem",right:"2rem",
         background:"none",border:"none",color:C.neonPink,fontSize:"1.5rem",
         cursor:"pointer",textShadow:GP(0.7),zIndex:1}}>✕</button>
-
-      {/* photo indicator dots */}
-      <div style={{position:"absolute",bottom:"2rem",left:"50%",transform:"translateX(-50%)",
-        display:"flex",gap:6,zIndex:1}}>
-        {photos.map((_,i) => (
-          <div key={i} onClick={() => setPhotoIdx(i)} style={{
-            width: i===photoIdx ? 18 : 6,
-            height:6,borderRadius:3,
-            background: i===photoIdx ? C.gold : "rgba(201,168,76,0.3)",
-            boxShadow: i===photoIdx ? GG(0.6) : "none",
-            transition:"all .4s",cursor:"pointer",
-          }}/>
-        ))}
-      </div>
 
       {/* nav links */}
       <div style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",
