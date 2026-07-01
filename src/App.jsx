@@ -226,7 +226,6 @@ function MobileNav({ open, onClose, go, navItems }) {
             {l}
           </span>
         ))}
-        <MarqueeDots center/>
       </div>
 
       {/* neon bottom line */}
