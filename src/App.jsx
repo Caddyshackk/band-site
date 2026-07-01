@@ -52,6 +52,15 @@ function useWindowWidth() {
 }
 
 function useScrollReveal() {
+// Preload gallery photos
+  useEffect(() => {
+    ["/gallery-1.jpg","/gallery-2.jpg","/gallery-3.jpg",
+     "/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg"].forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
     const io = new IntersectionObserver(entries => {
@@ -342,6 +351,15 @@ export default function App() {
       @media (pointer: fine) { * { cursor: none !important; } }
     `;
     document.head.appendChild(st);
+  }, []);
+
+  // 2. Preload gallery photos
+  useEffect(() => {
+    ["/gallery-1.jpg","/gallery-2.jpg","/gallery-3.jpg",
+     "/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg"].forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
   const go = id => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
