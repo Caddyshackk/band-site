@@ -171,12 +171,12 @@ function MobileNav({ open, onClose, go, navItems }) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const intervalRef = useRef(null);
   const photos = [
-    { src:"/gallery-1.jpg", pos:"center 40%" },
-    { src:"/gallery-2.webp", pos:"center 40%" },
-    { src:"/gallery-3.jpg",  pos:"center 40%" },
-    { src:"/gallery-4.webp", pos:"center 40%" },
-    { src:"/gallery-5.jpg",  pos:"center 40%" },
-    { src:"/gallery-6.jpg",  pos:"center 40%" },
+    { src:"/gallery-1.jpg", pos:"center" },
+    { src:"/gallery-2.webp", pos:"center" },
+    { src:"/gallery-3.jpg",  pos:"center" },
+    { src:"/gallery-4.webp", pos:"center" },
+    { src:"/gallery-5.jpg",  pos:"center" },
+    { src:"/gallery-6.jpg",  pos:"center" },
   ];
 
   useEffect(() => {
@@ -199,7 +199,7 @@ function MobileNav({ open, onClose, go, navItems }) {
         <div key={photo.src} style={{
           position:"absolute",inset:0,
           backgroundImage:`url(${photo.src})`,
-          backgroundSize:"contain",
+          backgroundSize:"cover",
           backgroundPosition:photo.pos,
           opacity: i === photoIdx ? 1 : 0,
           transition:"opacity 0.6s ease",
