@@ -205,7 +205,7 @@ function MobileNav({ open, onClose, go, navItems }) {
           position:"absolute",inset:0,
           backgroundImage:`url(${src})`,
           backgroundSize:"cover",
-          backgroundPosition:"center",
+          backgroundPosition:"center top",
           opacity: i === photoIdx ? 1 : 0,
           transition:"opacity 0.6s ease",
           filter:"saturate(0.9) brightness(0.95)",
