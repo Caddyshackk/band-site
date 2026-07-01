@@ -168,22 +168,85 @@ function CustomCursor() {
 // ─────────────────────────────────────────────
 
 function MobileNav({ open, onClose, go, navItems }) {
+  const [photoIdx, setPhotoIdx] = useState(0);
+  const photos = [
+    "/gallery-1.jpg","/gallery-2.jpg","/gallery-3.jpg",
+    "/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg",
+  ];
+
+  useEffect(() => {
+    if (!open) return;
+    const t = setInterval(() => setPhotoIdx(i => (i+1) % photos.length), 3000);
+    return () => clearInterval(t);
+  }, [open]);
+
   if (!open) return null;
+
   return (
-    <div style={{position:"fixed",inset:0,zIndex:150,background:"rgba(10,7,5,0.98)",
-      backdropFilter:"blur(20px)",display:"flex",flexDirection:"column",
-      alignItems:"center",justifyContent:"center",gap:"2rem"}}>
+    <div style={{position:"fixed",inset:0,zIndex:150,display:"flex",flexDirection:"column",
+      alignItems:"center",justifyContent:"center",gap:"2rem",overflow:"hidden"}}>
+
+      {/* sliding photo background */}
+      {photos.map((src,i) => (
+        <div key={src} style={{
+          position:"absolute",inset:0,
+          backgroundImage:`url(${src})`,
+          backgroundSize:"cover",
+          backgroundPosition:"center",
+          opacity: i === photoIdx ? 1 : 0,
+          transition:"opacity 1.2s ease",
+          filter:"saturate(0.7) brightness(0.35)",
+        }}/>
+      ))}
+
+      {/* dark vignette overlay */}
+      <div style={{position:"absolute",inset:0,
+        background:"radial-gradient(ellipse 80% 80% at 50% 50%, rgba(10,7,5,0.5) 0%, rgba(10,7,5,0.92) 100%)"}}/>
+
+      {/* neon top line */}
+      <div style={{position:"absolute",top:0,left:0,right:0,height:1,
+        background:`linear-gradient(90deg,transparent,${C.neonPink},transparent)`,opacity:0.6}}/>
+
+      {/* close button */}
       <button onClick={onClose} style={{position:"absolute",top:"1.5rem",right:"2rem",
         background:"none",border:"none",color:C.neonPink,fontSize:"1.5rem",
-        cursor:"pointer",textShadow:GP(0.7)}}>✕</button>
-      {navItems.map(l => (
-        <span key={l} style={{fontFamily:FONTS.display,fontSize:"clamp(1.5rem,6vw,2.2rem)",fontWeight:700,
-          color:C.ivory,letterSpacing:"0.06em",textTransform:"uppercase",cursor:"pointer"}}
-          onClick={() => { go(l.toLowerCase()); onClose(); }}>
-          {l}
-        </span>
-      ))}
-      <MarqueeDots center/>
+        cursor:"pointer",textShadow:GP(0.7),zIndex:1}}>✕</button>
+
+      {/* photo indicator dots */}
+      <div style={{position:"absolute",bottom:"2rem",left:"50%",transform:"translateX(-50%)",
+        display:"flex",gap:6,zIndex:1}}>
+        {photos.map((_,i) => (
+          <div key={i} onClick={() => setPhotoIdx(i)} style={{
+            width: i===photoIdx ? 18 : 6,
+            height:6,borderRadius:3,
+            background: i===photoIdx ? C.gold : "rgba(201,168,76,0.3)",
+            boxShadow: i===photoIdx ? GG(0.6) : "none",
+            transition:"all .4s",cursor:"pointer",
+          }}/>
+        ))}
+      </div>
+
+      {/* nav links */}
+      <div style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",
+        alignItems:"center",gap:"1.8rem"}}>
+        {navItems.map(l => (
+          <span key={l} style={{fontFamily:FONTS.display,fontSize:"clamp(1.5rem,6vw,2.2rem)",
+            fontWeight:700,color:C.ivory,letterSpacing:"0.08em",textTransform:"uppercase",
+            cursor:"pointer",transition:"color .2s,text-shadow .2s",
+            textShadow:"0 2px 20px rgba(0,0,0,0.8)"}}
+            onClick={() => { go(l.toLowerCase()); onClose(); }}
+            onMouseEnter={e => { e.target.style.color=C.neonPink; e.target.style.textShadow=GP(0.7); }}
+            onMouseLeave={e => { e.target.style.color=C.ivory; e.target.style.textShadow="0 2px 20px rgba(0,0,0,0.8)"; }}>
+            {l}
+          </span>
+        ))}
+        <MarqueeDots center/>
+      </div>
+
+      {/* neon bottom line */}
+      <div style={{position:"absolute",bottom:0,left:0,right:0,height:1,
+        background:`linear-gradient(90deg,transparent,${C.neonCyan},transparent)`,opacity:0.4}}/>
+
     </div>
   );
 }
@@ -283,7 +346,6 @@ export default function App() {
     SHOW.shows   && "Shows",
     SHOW.gallery && "Gallery",
     SHOW.merch   && "Merch",
-    "Contact",
   ].filter(Boolean);
 
   useEffect(() => {
@@ -465,7 +527,7 @@ export default function App() {
                   <a href={`mailto:${val}`} style={{color:C.dimText,textDecoration:"none"}}>{val}</a>
                 </p>
               ))}
-              
+
             </div>
             <div className="reveal reveal-right">
               <ContactForm/>
