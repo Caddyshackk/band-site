@@ -171,12 +171,12 @@ function MobileNav({ open, onClose, go, navItems }) {
   const [photoIdx, setPhotoIdx] = useState(0);
   const intervalRef = useRef(null);
   const photos = [
-    { src:"/gallery-1.jpg", pos:"center top" },
+    { src:"/gallery-1.jpg", pos:"center" },
     { src:"/gallery-2.webp", pos:"center 20%" },
-    { src:"/gallery-3.jpg",  pos:"center top" },
+    { src:"/gallery-3.jpg",  pos:"center" },
     { src:"/gallery-4.webp", pos:"center 20%" },
-    { src:"/gallery-5.jpg",  pos:"center top" },
-    { src:"/gallery-6.jpg",  pos:"center top" },
+    { src:"/gallery-5.jpg",  pos:"center" },
+    { src:"/gallery-6.jpg",  pos:"center" },
   ];
 
   useEffect(() => {
