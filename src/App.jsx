@@ -169,15 +169,21 @@ function CustomCursor() {
 
 function MobileNav({ open, onClose, go, navItems }) {
   const [photoIdx, setPhotoIdx] = useState(0);
+  const intervalRef = useRef(null);
   const photos = [
     "/gallery-1.jpg","/gallery-2.jpg","/gallery-3.jpg",
     "/gallery-4.jpg","/gallery-5.jpg","/gallery-6.jpg",
   ];
 
   useEffect(() => {
-    if (!open) return;
-    const t = setInterval(() => setPhotoIdx(i => (i+1) % photos.length), 3000);
-    return () => clearInterval(t);
+    if (!open) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
+    intervalRef.current = setInterval(() => {
+      setPhotoIdx(i => (i + 1) % photos.length);
+    }, 3000);
+    return () => clearInterval(intervalRef.current);
   }, [open]);
 
   if (!open) return null;
@@ -185,8 +191,6 @@ function MobileNav({ open, onClose, go, navItems }) {
   return (
     <div style={{position:"fixed",inset:0,zIndex:150,display:"flex",flexDirection:"column",
       alignItems:"center",justifyContent:"center",gap:"2rem",overflow:"hidden"}}>
-
-      {/* sliding photo background */}
       {photos.map((src,i) => (
         <div key={src} style={{
           position:"absolute",inset:0,
@@ -194,25 +198,18 @@ function MobileNav({ open, onClose, go, navItems }) {
           backgroundSize:"cover",
           backgroundPosition:"center",
           opacity: i === photoIdx ? 1 : 0,
-          transition:"opacity 1.2s ease",
-          filter:"saturate(0.9) brightness(0.55)",
+          transition:"opacity 1.5s ease",
+          filter:"saturate(0.9) brightness(0.95)",
+          willChange:"opacity",
         }}/>
       ))}
-
-      {/* dark vignette overlay */}
       <div style={{position:"absolute",inset:0,
-        background:"radial-gradient(ellipse 80% 80% at 50% 50%, rgba(10,7,5,0.5) 0%, rgba(10,7,5,0.92) 100%)"}}/>
-
-      {/* neon top line */}
+        background:"radial-gradient(ellipse 80% 80% at 50% 50%, rgba(10,7,5,0.4) 0%, rgba(10,7,5,0.88) 100%)"}}/>
       <div style={{position:"absolute",top:0,left:0,right:0,height:1,
         background:`linear-gradient(90deg,transparent,${C.neonPink},transparent)`,opacity:0.6}}/>
-
-      {/* close button */}
       <button onClick={onClose} style={{position:"absolute",top:"1.5rem",right:"2rem",
         background:"none",border:"none",color:C.neonPink,fontSize:"1.5rem",
         cursor:"pointer",textShadow:GP(0.7),zIndex:1}}>✕</button>
-
-      {/* nav links */}
       <div style={{position:"relative",zIndex:1,display:"flex",flexDirection:"column",
         alignItems:"center",gap:"1.8rem"}}>
         {navItems.map(l => (
@@ -221,17 +218,14 @@ function MobileNav({ open, onClose, go, navItems }) {
             cursor:"pointer",transition:"color .2s,text-shadow .2s",
             textShadow:"0 2px 20px rgba(0,0,0,0.8)"}}
             onClick={() => { go(l.toLowerCase()); onClose(); }}
-            onMouseEnter={e => { e.target.style.color=C.neonPink; e.target.style.textShadow=GP(0.7); }}
-            onMouseLeave={e => { e.target.style.color=C.ivory; e.target.style.textShadow="0 2px 20px rgba(0,0,0,0.8)"; }}>
+            onMouseEnter={e=>{e.target.style.color=C.neonPink;e.target.style.textShadow=GP(0.7);}}
+            onMouseLeave={e=>{e.target.style.color=C.ivory;e.target.style.textShadow="0 2px 20px rgba(0,0,0,0.8)";}}>
             {l}
           </span>
         ))}
       </div>
-
-      {/* neon bottom line */}
       <div style={{position:"absolute",bottom:0,left:0,right:0,height:1,
         background:`linear-gradient(90deg,transparent,${C.neonCyan},transparent)`,opacity:0.4}}/>
-
     </div>
   );
 }
