@@ -199,7 +199,7 @@ function MobileNav({ open, onClose, go, navItems }) {
         <div key={photo.src} style={{
           position:"absolute",inset:0,
           backgroundImage:`url(${photo.src})`,
-          backgroundSize:"cover",
+          backgroundSize:"contain",
           backgroundPosition:photo.pos,
           opacity: i === photoIdx ? 1 : 0,
           transition:"opacity 0.6s ease",
